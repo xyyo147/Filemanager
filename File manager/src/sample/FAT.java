@@ -1,15 +1,21 @@
 package sample;
 
 public class FAT {
-    public  int[][] getFAT(){
-        int[][]FAT = new int[2][64] ;
+    static char[][]fat = new char[2][64] ;
+    public static void setFAT(int i,int j,char num) {
+        DiskBlock.diskBlock[i][j]=num;
+        getFAT();
+    }
+    public static   void getFAT(){
+
         for(int i=0;i<2;i++)
         {
             for( int j=0;j<64;j++)
             {
-                FAT[i][j]=DiskBlock.diskBlock[i][j];
+                fat[i][j]=DiskBlock.diskBlock[i][j];
+                System.out.println(fat[i][j]);
             }
         }
-        return FAT;
-    }//获取FAT
+    }//获取fat或者刷新fat
+
 }
