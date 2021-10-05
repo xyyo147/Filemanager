@@ -39,10 +39,17 @@ public  class DiskBlock {
         return diskBlock.get(number);
     }
     public static void deleteFile(int number) //删除磁盘文件
-    {
+    {   int lastnum=number;
         if (number!=0&&number!=1){
-            diskBlock.set(number, null);
-            RefreshFat(number/64,number%64,0);
+            if(FAT.search(lastnum)==-1){
+                diskBlock.set(number, null);
+                RefreshFat(number/64,number%64,0);
+            }
+            else {
+                deleteFile(FAT.search(lastnum));
+                diskBlock.set(number,null);
+                RefreshFat(number/64,number%64,0);
+            }
         }
         //保护fat
     }
