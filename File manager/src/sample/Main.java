@@ -11,7 +11,21 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception{
         DiskBlock.initialization();
-        FAT.getFAT();//初始化，必须要有
+        int a[][]= FAT.getFAT();//初始化，必须要有
+        /*以下是测试代码
+        int lastnum;
+        lastnum= DiskBlock.searchEmptyDiskBlock(true,254);
+        DiskBlock.write(lastnum,"hello");
+        DiskBlock.deleteFile(lastnum);
+        for(int i=0;i<2;i++)
+        {
+            for (int j=0;j<64;j++)
+                System.out.println(a[i][j]);
+        }
+
+        System.out.println(lastnum);
+        System.out.println(DiskBlock.read(lastnum));
+         */
 
         Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
         primaryStage.setTitle("Hello World");
