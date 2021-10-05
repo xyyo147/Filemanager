@@ -16,7 +16,8 @@ public class Main extends Application {
         int lastnum;
         lastnum= DiskBlock.searchEmptyDiskBlock(true,254);
         DiskBlock.write(lastnum,"hello");
-        DiskBlock.deleteFile(lastnum);
+        FAT.fat[0][3]=2;
+        DiskBlock.deleteFile(3);
         for(int i=0;i<2;i++)
         {
             for (int j=0;j<64;j++)
@@ -25,6 +26,8 @@ public class Main extends Application {
 
         System.out.println(lastnum);
         System.out.println(DiskBlock.read(lastnum));
+
+
          */
 
         Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
