@@ -18,8 +18,9 @@ import java.io.File;
 //way 是读写方式，0为只读，1为读写
 public class createFile{
 
-    public createFile(int way,String filepath,String filename) {
-        Node cre_file=new file(way,filepath,filename);
+    public createFile(String filename,int way) {
+        file cre_file=new file();
+
         if(way==0){             //如果文件属性是只读，建立失败
             System.out.println("创建失败");
         }
@@ -31,13 +32,16 @@ public class createFile{
             }
             else
             {                                                       //有重名文件，创建文件失败
-                if(cre_file.getParent().findSamename()！=null)        //这里需要写与它同一目录的文件，是否有重名
+                if(cre_file.findSamename()==1)        //这里需要写与它同一目录的文件，是否有重名
                 {//如果有重名
                     System.out.println("创建失败");
                 }
                 else
                 {
                     cre_file.create_content();//将信息排除过后，建立文件目录
+//                    并分配给它一个磁盘块，最后填写目录和已打开文件表。
+                    cre_file.alopfile();
+
                 }
             }
 
