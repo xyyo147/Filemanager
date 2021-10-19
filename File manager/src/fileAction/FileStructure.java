@@ -1,4 +1,4 @@
-package sample;
+package file;
 import java.util.*;
 
 public class FileStructure {
@@ -16,7 +16,7 @@ public class FileStructure {
     /*每个磁盘块最多可放8哥文件目录或子目录项*/
     private List<FileStructure> fileCatalog = new ArrayList<FileStructure>();
     /*模拟该文件目录所在磁盘空间，该磁盘块最多可存8哥目录项*/
-    private int fileCatalog_number = 0;
+    private static int fileCatalog_number = 0;
     /*数组的长度（该文件目录下有多少哥子文件或子目录）*/
 
 
@@ -99,6 +99,8 @@ public class FileStructure {
         fileCatalog.remove(a);
     }
     /*将子文件或子目录从该数组中删除*/
-
+    public static int getfileCatalog_number(){
+        return fileCatalog_number;
+    }
 
 }
