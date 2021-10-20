@@ -15,6 +15,7 @@ public  class DiskBlock {
             diskBlock.add(i,null);
         RefreshFat(0,0,-1);
         RefreshFat(0,1,-1);
+        RefreshFat(0,2,-1);
         RefreshFat(1,0,0);
         FileStructure fileStructure=new FileStructure(null,"根目录",2,1000);
         write(2,fileStructure);
@@ -53,17 +54,23 @@ public  class DiskBlock {
     }
     public static String readFile(int number) //读出磁盘内的文件
     {
-        StringBuilder str=null;
-        if(number==-1)
+        StringBuilder str=new StringBuilder();
+       char[] ch=new char[100000];
+       int i=0;
+        if(number>128||number<=0)
             return "错误";
         else
         {
-            while (number!=-1){
-                str.append(read(number)) ;
+            while (number>2&&number<128){
+
+
+                    String st= (String) diskBlock.get(number);
+                        str.append(st);
                 number=FAT.getNextLnum(number);
             }
+            return str.toString();
         }
-        return str.toString();
+
     }
     public static Object read(int number) //读出磁盘内的文件
     {
@@ -87,10 +94,9 @@ public  class DiskBlock {
         }
         //保护fat
     }
-    public static void writeIntFile(int[] array){
+    /*public static void writeIntFile(int[] array,int lastnum){
         int len=array.length;
         int i=0;
-        int lastnum=254;
         while (len>64){
             int[] ob=new int[64];
             lastnum= DiskBlock.searchEmptyDiskBlock(false,lastnum);
@@ -104,24 +110,63 @@ public  class DiskBlock {
         if (len >= 0) System.arraycopy(array, i, ob, 0, len);
         DiskBlock.write(lastnum,ob);
     }
-    public static void writeStringFile(String array){
+    */
+    public static int ifFull(){
+        int lastnum=searchEmptyDiskBlock(true,254);
+        return lastnum;
+    }//判断磁盘是否有空磁盘块
+    public static int writeStringFile(String array,int lastnum){
         int len=array.length();
         int i=0;
-        int lastnum=254;
+        int head=-1;
+        char[] first=new char[64];
+        if(len<=0)
+        {
+            return head;
+        }
+        else if(len>64){
+            head=lastnum;
+            array.getChars(i,i+64,first,0);
+            i+=64;
+            len-=64;
+            String str;
+            str=String.valueOf(first);
+            DiskBlock.write(lastnum,str);
+        }//写入第一个磁盘储存头磁盘号
+        else if(len<=64){
+            head=lastnum;
+            char[] ob=new char[len];
+            array.getChars(i,i+len,ob,0);
+            String str;
+            str=String.valueOf(ob);
+            DiskBlock.write(lastnum,str);
+            return head;
+        }
         while (len>64){
             char[] ob=new char[64];
             lastnum= DiskBlock.searchEmptyDiskBlock(false,lastnum);
             array.getChars(i,i+64,ob,0);
             i+=64;
             len-=64;
-            DiskBlock.write(lastnum,ob);
+            String str;
+            str=String.valueOf(ob);
+            DiskBlock.write(lastnum,str);
         }
-        lastnum= DiskBlock.searchEmptyDiskBlock(true,lastnum);
-        char[] ob=new char[len];
-        array.getChars(i,i+len,ob,0);
-        DiskBlock.write(lastnum,ob);
+        if(len>0){
+            lastnum= DiskBlock.searchEmptyDiskBlock(true,lastnum);
+            char[] ob=new char[len];
+            array.getChars(i,i+len,ob,0);
+            String str;
+            str=String.valueOf(ob);
+            DiskBlock.write(lastnum,str);
+        }
+        return head;
     }
-
+    public static int  writeCatalog(FileStructure catalog){
+        int lastnum=searchEmptyDiskBlock(true,254);
+        DiskBlock.write(lastnum,catalog);
+        return lastnum;
+    }
     public static int searchEmptyDiskBlock(Boolean finish,int lastnum){
         FAT.getFAT();
         Boolean isntEmpty=true;
@@ -193,11 +238,12 @@ public  class DiskBlock {
                     }
             }
         }catch (Exception e){}
-        if(isntEmpty)
+        if(isntEmpty){
             System.out.println("磁盘已满");
+            return -1;
+        }
+
         FAT.getFAT();
         return lastnum;
     }
-
-
 }

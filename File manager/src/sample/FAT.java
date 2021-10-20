@@ -23,4 +23,5 @@ public class FAT {
        lastnum=fat[i][j];
        return lastnum;
     }
+
 }
