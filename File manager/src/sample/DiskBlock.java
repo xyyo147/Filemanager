@@ -1,7 +1,5 @@
 package sample;
 
-import fileAction.FileStructure;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -21,20 +19,27 @@ public  class DiskBlock {
         write(2,fileStructure);
         //初始化fat
     }//初始化磁盘块
-    public static Boolean ifExist(FileStructure fileStructure, String name){
-                  List<FileStructure> catalog=  fileStructure.getFlieCatalog();
-        for(int i=0;i<8;i++){
-            FileStructure fs;
-            fs=catalog.get(i);
-            if(fs.getName()==name)
-                return true;
+    public static Boolean ifExist(FileStructure fileStructure, String name,int FILE){
+        if(FILE==0100){
+            List<FileStructure> catalog=  fileStructure.getFlieCatalog();
+            for(int i=0;i<8;i++){
+                FileStructure fs;
+                fs=catalog.get(i);
+                if(fs.getName()==name)
+                    return true;
+            }
+            return false;
+        }
+        else if(FILE==1000){
+            return true;//(还没完成，需要目录补充)
         }
         return false;
     }
-    private static void RefreshFat(int i,int j,int num){
+
+    public static void RefreshFat(int i,int j,int num){
         int[] a=new int[64];
         if(diskBlock.get(i)!=null)
-        a= (int[]) diskBlock.get(i);//取出fat的前半段或后半段
+            a= (int[]) diskBlock.get(i);//取出fat的前半段或后半段
         a[j]=num;//更新
         diskBlock.set(i,a);//放回
         FAT.getFAT();
@@ -42,7 +47,8 @@ public  class DiskBlock {
     public  static List<Object> getDiskBlock() {
         return diskBlock;
     }
-    private static void write(int num,Object theFile) //文件写入磁盘
+
+    public static void write(int num,Object theFile) //文件写入磁盘
     {
         if (num!=0&&num!=1&&num<128) {
             diskBlock.set(num, theFile);
@@ -53,8 +59,8 @@ public  class DiskBlock {
     public static String readFile(int number) //读出磁盘内的文件
     {
         StringBuilder str=new StringBuilder();
-       char[] ch=new char[100000];
-       int i=0;
+        char[] ch=new char[100000];
+        int i=0;
         if(number>128||number<=0)
             return "错误";
         else
@@ -62,18 +68,18 @@ public  class DiskBlock {
             while (number>2&&number<128){
 
 
-                    String st= (String) diskBlock.get(number);
-                        str.append(st);
+                String st= (String) diskBlock.get(number);
+                str.append(st);
                 number=FAT.getNextLnum(number);
             }
             return str.toString();
         }
 
     }
-    private static Object read(int number) //读出磁盘内的文件
+    public static Object read(int number) //读出磁盘内的文件
     {
         if(number!=-1&&number>1&&number<128)
-        return diskBlock.get(number);
+            return diskBlock.get(number);
         else return "错误";
     }
     public static void deleteFile(int number) //删除磁盘文件
@@ -159,12 +165,12 @@ public  class DiskBlock {
             DiskBlock.write(lastnum,str);
         }
         return head;
-    }//文件写入磁盘块
+    }
     public static int  writeCatalog(FileStructure catalog){
         int lastnum=searchEmptyDiskBlock(true,254);
         DiskBlock.write(lastnum,catalog);
         return lastnum;
-    }//写文件
+    }
     public static int searchEmptyDiskBlock(Boolean finish,int lastnum){
         FAT.getFAT();
         Boolean isntEmpty=true;
@@ -172,17 +178,17 @@ public  class DiskBlock {
         {
             try
             {
-            for (int i=0;i<2;i++)
-                 {
+                for (int i=0;i<2;i++)
+                {
                     for(int j=0;j<64;j++)
                     {
-                    if(FAT.fat[i][j]==0)
-                    {
-                        lastnum=i*64+j;
-                        RefreshFat(i,j,255);//255表示尚未完成储存
-                        isntEmpty=false;//找到空磁盘并返回空磁盘序号
-                        throw new Exception("跳出循环");
-                    }
+                        if(FAT.fat[i][j]==0)
+                        {
+                            lastnum=i*64+j;
+                            RefreshFat(i,j,255);//255表示尚未完成储存
+                            isntEmpty=false;//找到空磁盘并返回空磁盘序号
+                            throw new Exception("跳出循环");
+                        }
                     }
                 }
             }
@@ -234,8 +240,8 @@ public  class DiskBlock {
                             }
                         }
                     }
-            }
-        }catch (Exception e){}
+                }
+            }catch (Exception e){}
         if(isntEmpty){
             System.out.println("磁盘已满");
             return -1;

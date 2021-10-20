@@ -1,4 +1,4 @@
-package fileAction;
+package sample;
 import java.util.*;
 
 public class FileStructure {
@@ -14,10 +14,12 @@ public class FileStructure {
     /*用于判断是文件还是目录*/
     private final int MAX_FILE_NUMBER = 8;
     /*每个磁盘块最多可放8哥文件目录或子目录项*/
-    private List<FileStructure> fileCatalog = new ArrayList<>();
+    private List<FileStructure> fileCatalog = new ArrayList<FileStructure>();
     /*模拟该文件目录所在磁盘空间，该磁盘块最多可存8哥目录项*/
     private static int fileCatalog_number = 0;
     /*数组的长度（该文件目录下有多少哥子文件或子目录）*/
+    private static int signal=0;
+    /*设置信号量，标记打开表中本目录与子文件或子目录的打开数目，方便打开父目录*/
 
 
 
@@ -84,6 +86,10 @@ public class FileStructure {
     }
     /*获取子文件和子目录数组*/
 
+    public static int getfileCatalog_number(){
+        return fileCatalog_number;
+    }
+
     public boolean setFileCatalog(FileStructure a){
         if(fileCatalog_number<MAX_FILE_NUMBER) {
             fileCatalog.add(a);
@@ -97,10 +103,31 @@ public class FileStructure {
 
     public void deleteFileCatalog(FileStructure a){
         fileCatalog.remove(a);
+        fileCatalog_number--;
     }
     /*将子文件或子目录从该数组中删除*/
-    public static int getfileCatalog_number(){
-        return fileCatalog_number;
+
+    public  void openSignal(){
+        if(signal==0){
+            FileConstraint.enterTable(this);
+        }
+        signal++;
     }
+
+    public void closeSignal(){
+        if(signal==1){
+            FileConstraint.outTable(this);
+        }
+        signal--;
+    }
+
+    public int getSignal(){
+        return signal;
+    }
+
+    public void clearSignal(){
+        signal = 0;
+    }
+
 
 }
