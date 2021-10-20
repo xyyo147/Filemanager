@@ -28,15 +28,19 @@ public class Main extends Application {
 
 
          */
-        String array="hello";
-        DiskBlock.writeStringFile(array);
-        System.out.println("输出盘块");
-        char[] x= (char[]) DiskBlock.getDiskBlock().get(2);
+        String array="撒旦撒旦撒旦撒旦撒旦撒旦撒旦撒旦撒旦撒旦撒旦撒旦撒旦撒旦撒旦撒旦撒旦撒旦撒旦撒旦撒旦撒旦撒旦撒旦撒旦撒旦撒旦撒旦撒旦撒旦撒旦撒旦撒旦撒旦撒旦撒旦撒旦撒旦撒旦撒旦撒旦撒旦撒旦撒旦撒旦撒旦撒旦撒旦撒旦撒旦撒旦撒旦撒旦撒旦撒旦撒旦          撒旦撒旦撒旦撒旦";
+        int lastnum=DiskBlock.writeStringFile(array,3);
+        System.out.println("输出盘块"+lastnum);
+       String str= DiskBlock.readFile(3);
+        System.out.println(str);
+        DiskBlock.deleteFile(3);
+        str= DiskBlock.readFile(3);System.out.println(str);
+        /*char[] x= (char[]) DiskBlock.getDiskBlock().get(3);
         if (x!=null)
-        for(int k=0;k< x.length;k++)
-        System.out.println(x[k]);
+        System.out.println(String.valueOf(x));
 
-/*
+
+
         Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
         primaryStage.setTitle("Hello World");
         primaryStage.setScene(new Scene(root, 300, 275));
