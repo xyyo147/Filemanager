@@ -12,28 +12,37 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception{
         DiskBlock.initialization();
         int a[][]= FAT.getFAT();//初始化，必须要有
-        /*以下是测试代码
-        int lastnum;
-        lastnum= DiskBlock.searchEmptyDiskBlock(true,254);
-        DiskBlock.write(lastnum,"hello");
+
+
+/*
         FAT.fat[0][3]=2;
         DiskBlock.deleteFile(3);
-        for(int i=0;i<2;i++)
+
+ */
+        /*
+        for(int k=0;k<2;k++)
         {
             for (int j=0;j<64;j++)
-                System.out.println(a[i][j]);
+                System.out.println(a[k][j]);
         }
-
-        System.out.println(lastnum);
-        System.out.println(DiskBlock.read(lastnum));
 
 
          */
+        String array="hello";
+        DiskBlock.writeStringFile(array);
+        System.out.println("输出盘块");
+        char[] x= (char[]) DiskBlock.getDiskBlock().get(2);
+        if (x!=null)
+        for(int k=0;k< x.length;k++)
+        System.out.println(x[k]);
 
+/*
         Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
         primaryStage.setTitle("Hello World");
         primaryStage.setScene(new Scene(root, 300, 275));
         primaryStage.show();
+
+ */
     }
 
 

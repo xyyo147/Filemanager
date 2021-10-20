@@ -17,5 +17,10 @@ public class FAT {
         return fat;
     }//获取fat或者刷新fat
 
-
+    public static int getNextLnum(int lastnum){//得到下一文件块号
+       int  i=lastnum/64;
+       int j=lastnum%64;
+       lastnum=fat[i][j];
+       return lastnum;
+    }
 }
