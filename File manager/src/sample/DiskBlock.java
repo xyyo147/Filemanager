@@ -31,8 +31,7 @@ public  class DiskBlock {
         }
         return false;
     }
-
-    public static void RefreshFat(int i,int j,int num){
+    private static void RefreshFat(int i,int j,int num){
         int[] a=new int[64];
         if(diskBlock.get(i)!=null)
         a= (int[]) diskBlock.get(i);//取出fat的前半段或后半段
@@ -43,8 +42,7 @@ public  class DiskBlock {
     public  static List<Object> getDiskBlock() {
         return diskBlock;
     }
-
-    public static void write(int num,Object theFile) //文件写入磁盘
+    private static void write(int num,Object theFile) //文件写入磁盘
     {
         if (num!=0&&num!=1&&num<128) {
             diskBlock.set(num, theFile);
@@ -72,7 +70,7 @@ public  class DiskBlock {
         }
 
     }
-    public static Object read(int number) //读出磁盘内的文件
+    private static Object read(int number) //读出磁盘内的文件
     {
         if(number!=-1&&number>1&&number<128)
         return diskBlock.get(number);
@@ -161,12 +159,12 @@ public  class DiskBlock {
             DiskBlock.write(lastnum,str);
         }
         return head;
-    }
+    }//文件写入磁盘块
     public static int  writeCatalog(FileStructure catalog){
         int lastnum=searchEmptyDiskBlock(true,254);
         DiskBlock.write(lastnum,catalog);
         return lastnum;
-    }
+    }//写文件
     public static int searchEmptyDiskBlock(Boolean finish,int lastnum){
         FAT.getFAT();
         Boolean isntEmpty=true;
