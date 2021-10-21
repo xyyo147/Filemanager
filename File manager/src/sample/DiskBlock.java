@@ -119,6 +119,17 @@ public  class DiskBlock {
         int lastnum=searchEmptyDiskBlock(true,254);
         return lastnum;
     }//判断磁盘是否有空磁盘块
+    public static Boolean ifEnough(int num){
+        int count=0;
+        for(int i=0;i<2;i++){
+            for(int j=0;j<64;j++)
+                if(FAT.fat[i][j]==0)
+                    count++;
+        }
+        if(count>=num)
+            return true;
+        else return false;
+    }
     public static int writeStringFile(String array,int lastnum){
         int len=array.length();
         int i=0;
