@@ -1,4 +1,5 @@
 package sample;
+import java.awt.*;
 import java.io.File;
 import java.util.*;
 
@@ -83,7 +84,7 @@ public class FileOperation {
 
     public static  String changeName(){
         String name;
-        name= new TextArea().getText();
+        name= (new TextArea()).getText();
         return name;
     }
     public static int changeAttribute(){
