@@ -117,6 +117,12 @@ public class FileOperation {
 
         }
     }
+    public static void SaveData(FileStructure rootCatalog){        //这里只能放入根目录作为参数
+        Serializationmode.Serialization(rootCatalog);
+    }
+    public static void ReadData(File file){
+        Serializationmode.Deserialization(file);
+    }
 
 }
 

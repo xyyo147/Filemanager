@@ -1,8 +1,7 @@
 package sample;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
+
 
 //创建磁盘块
 public  class DiskBlock {
@@ -13,7 +12,6 @@ public  class DiskBlock {
             diskBlock.add(i,null);
         RefreshFat(0,0,-1);
         RefreshFat(0,1,-1);
-        RefreshFat(0,2,-1);
         RefreshFat(1,0,0);
         FileStructure fileStructure=new FileStructure(null,"根目录",2,1000);
         write(2,fileStructure);
@@ -22,14 +20,17 @@ public  class DiskBlock {
     public static Boolean ifExist(FileStructure fileStructure, String name,int FILE){
         if(FILE==0100){
             List<FileStructure> catalog=  fileStructure.getFlieCatalog();
-            for(int i=0;i<8;i++){
-                FileStructure fs;
-                fs=catalog.get(i);
-                if(fs.getName()==name)
-                    return true;
+            if(catalog==null)
+                System.out.println("空");
+            else {
+                for(FileStructure fs:catalog){
+                    if(fs.getName()==name)
+                        return true;
+                }
+                return false;
             }
-            return false;
         }
+
         else if(FILE==1000){
             return true;//(还没完成，需要目录补充)
         }
@@ -50,7 +51,7 @@ public  class DiskBlock {
 
     public static void write(int num,Object theFile) //文件写入磁盘
     {
-        if (num!=0&&num!=1&&num<128) {
+        if (num>1&&num<128) {
             diskBlock.set(num, theFile);
         }
         else if(num>=128)
@@ -61,8 +62,11 @@ public  class DiskBlock {
         StringBuilder str=new StringBuilder();
         char[] ch=new char[100000];
         int i=0;
-        if(number>128||number<=0)
-            return "错误";
+        if(number>128||number<=0){
+            System.out.println(number);
+            return "错误！！！！";
+        }
+
         else
         {
             while (number>2&&number<128){
@@ -166,10 +170,11 @@ public  class DiskBlock {
         }
         return head;
     }
-    public static int  writeCatalog(FileStructure catalog){
-        int lastnum=searchEmptyDiskBlock(true,254);
+    public static void  writeCatalog(FileStructure catalog,int lastnum){
+        //searchEmptyDiskBlock(true,254);
         DiskBlock.write(lastnum,catalog);
-        return lastnum;
+        RefreshFat(lastnum/64,lastnum%64,-1);
+        // return lastnum;
     }
     public static int searchEmptyDiskBlock(Boolean finish,int lastnum){
         FAT.getFAT();
@@ -249,5 +254,17 @@ public  class DiskBlock {
 
         FAT.getFAT();
         return lastnum;
+    }
+
+    public static Boolean ifEnough(int num){
+        int count=0;
+        for(int i=0;i<2;i++){
+            for(int j=0;j<64;j++)
+                if(FAT.fat[i][j]==0)
+                    count++;
+        }
+        if(count>=num)
+            return true;
+        else return false;
     }
 }

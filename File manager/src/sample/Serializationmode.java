@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Serializationmode implements Serializable {    //文件内容序列化与反序列化类
-        final static long serialVersionUID=1L;      //UID版本号，序列化与反序列化的版本号一样，反序列化才能够执行
+        public static long serialVersionUID=1L;      //UID版本号，序列化与反序列化的版本号一样，反序列化才能够执行
     public static List<FileStructure> all_files = new ArrayList<FileStructure>();  //储存全部节点的list
     public static List<FileStructure> new_files = new ArrayList<FileStructure>();  //加载全部节点的list
     public static void getAllfiles(FileStructure catalog){
@@ -13,7 +13,11 @@ public class Serializationmode implements Serializable {    //文件内容序列
         for(FileStructure file:current_files){
            if((catalog.getAttribute() == 0001)||(catalog.getAttribute() == 0100)||(catalog.getAttribute()==0010))
             all_files.add(file);    //如果属于文件
-            if(catalog.getAttribute()==1000)  getAllfiles(file);     //如果属于目录，继续进入
+            if(catalog.getAttribute()==1000) {
+                all_files.add(catalog);
+                getAllfiles(file);     //如果属于目录，继续进入
+
+            }
         }
     }//这样写是可以遍历全部的文件，但其中的父子之间的关系弄混乱，应该怎么解决
 
@@ -24,13 +28,13 @@ public class Serializationmode implements Serializable {    //文件内容序列
             File savefile=new File("save.dat");
             FileOutputStream fos=new FileOutputStream(savefile);//FileOutputStream对象写入文本文件
             ObjectOutputStream oos=new ObjectOutputStream(fos);     //建立对象的序列化流
-                //利用递归函数，如果当前目录有子文件，则List+=List
 //                 oos.writeObject(Ffile);                             //将Ffile对象序列化流写入文件save
                 getAllfiles(rootfile);
                 List<FileStructure> save_files=all_files;
-                for(FileStructure files:save_files) {
+                for(FileStructure files:all_files) {
                     oos.writeObject(files);
                 }
+                oos.writeObject(null);
                 oos.close();
                 fos.close();
             } catch (IOException ex){
@@ -43,10 +47,14 @@ public class Serializationmode implements Serializable {    //文件内容序列
             try {
                 FileInputStream fis = new FileInputStream(savefile);    //FileInputStream对象读取文本文件
                 ObjectInputStream ois = new ObjectInputStream(fis); //建立反序列化流对象
+                System.out.println(fis.available());
                 while(fis.available()>0)
                 {
                     Ffile = (FileStructure) ois.readObject();     //将读取到的对象序列赋给Ffile对象
-                    new_files.add(Ffile);
+                    if(Ffile!=null) {
+                        new_files.add(Ffile);
+                        System.out.println(Ffile.getName());
+                    }
                 }
 
 

@@ -1,7 +1,8 @@
 package sample;
+import java.io.Serializable;
 import java.util.*;
 
-public class FileStructure {
+public class FileStructure implements Serializable {
     private String name;
     /*文件或目录名*/
     private int attribute;

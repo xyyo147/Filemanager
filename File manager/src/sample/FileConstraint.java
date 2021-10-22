@@ -46,7 +46,7 @@ public class FileConstraint {
     }/*长度争取*/
 
     private static boolean notReprtTrue(FileStructure file,String name,int P){
-        if(DiskBlock.ifExist(file,name,P)){//在磁盘中查询是否有这个文件名的文件，应该在diskblock中实现，肖鹏没写
+        if(!DiskBlock.ifExist(file,name,P)){//在磁盘中查询是否有这个文件名的文件，应该在diskblock中实现，肖鹏没写
             return true;
         }
         else {
@@ -142,7 +142,7 @@ public class FileConstraint {
     }
     public static boolean deleteFile(FileStructure file,String filename){
         if((!notReprtTrue(file,filename,1)&&(havedOpen(file)))  ) //这里的P是1，查询文件
-        return true;
+            return true;
         return false;
     }
     public static boolean typeFile(FileStructure file,String filename){
