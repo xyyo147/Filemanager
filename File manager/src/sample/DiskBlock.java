@@ -20,19 +20,28 @@ public  class DiskBlock {
     public static Boolean ifExist(FileStructure fileStructure, String name,int FILE){
         if(FILE==0100){
             List<FileStructure> catalog=  fileStructure.getFlieCatalog();
-            if(catalog==null)
-                System.out.println("空");
+            if(catalog==null) {
+            }
             else {
                 for(FileStructure fs:catalog){
-                    if(fs.getName()==name)
+                    if(fs.getName().equals(name))
                         return true;
                 }
-                return false;
             }
+            return false;
         }
 
         else if(FILE==1000){
-            return true;//(还没完成，需要目录补充)
+            List<FileStructure> catalog=  fileStructure.getFlieCatalog();
+            if(catalog==null) {
+            }
+            else {
+                for(FileStructure fs:catalog){
+                    if(fs.getName().equals(name))
+                        return true;
+                }
+            }
+            return false;
         }
         return false;
     }

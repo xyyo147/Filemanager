@@ -6,9 +6,8 @@ import java.util.List;
 import java.util.Objects;
 
 public class FileConstraint {
-    private static final int MAX_OPFILE_NUMBER=5;
     private static int op_length=0;          //已打开文件登记表中登记的文件数量
-    public static List<FileStructure> OpTable_check = new ArrayList<FileStructure>(5);  //已打开文件表的list
+    public static List<FileStructure> OpTable_check = new ArrayList<FileStructure>();  //已打开文件表的list
     public static FileStructure rootCatalog;
     //根目录
 
@@ -46,7 +45,7 @@ public class FileConstraint {
     }/*长度争取*/
 
     private static boolean notReprtTrue(FileStructure file,String name,int P){
-        if(!DiskBlock.ifExist(file,name,P)){//在磁盘中查询是否有这个文件名的文件，应该在diskblock中实现，肖鹏没写
+        if(!DiskBlock.ifExist(file,name,P)){//在磁盘中查询是否有这个文件名的文件，应该在diskblock中实现
             return true;
         }
         else {
@@ -103,7 +102,9 @@ public class FileConstraint {
     }
     /*判断该文件可不可以写*/
 
-    public static int catalogNumber(String text){
+
+
+   public static int catalogNumber(String text){
         if(text!=null){
             int x = text.length()/64;
             return x+1;
@@ -142,7 +143,7 @@ public class FileConstraint {
     }
     public static boolean deleteFile(FileStructure file,String filename){
         if((!notReprtTrue(file,filename,1)&&(havedOpen(file)))  ) //这里的P是1，查询文件
-            return true;
+        return true;
         return false;
     }
     public static boolean typeFile(FileStructure file,String filename){
@@ -154,4 +155,5 @@ public class FileConstraint {
         if((IsfilestructureExist(file))&&havedOpen(file)){ return true;}
         return false;
     }
-}
+
+ }

@@ -2,6 +2,7 @@ package sample;
 import java.awt.*;
 import java.io.File;
 import java.util.*;
+import java.util.List;
 
 public class FileOperation {
     public static int begin;
@@ -9,19 +10,22 @@ public class FileOperation {
 
     public static FileStructure createFile(FileStructure currentCatalog,String name){
         //currentCatalog为当前目录，name为文件名
-            if(FileConstraint.createFile(currentCatalog,name,FILE)){
-                begin = DiskBlock.ifFull();
-                /*得到初始磁盘块号，-1说明内存满了，创建失败*/
-            }
+        if(FileConstraint.createFile(currentCatalog,name,FILE)){
+            begin = DiskBlock.ifFull();
+            /*得到初始磁盘块号，-1说明内存满了，创建失败*/
+        }
+        else{
+            throw new IllegalArgumentException("创建失败");
+        }
 
-            if(begin!=-1){
-                FileStructure file = new FileStructure(currentCatalog,name,begin,FILE);
-                currentCatalog.setFileCatalog(file);
-                return file;
-            }
-            else{
-                throw new IllegalArgumentException("创建失败");
-            }
+        if(begin!=-1){
+            FileStructure file = new FileStructure(currentCatalog,name,begin,FILE);
+            currentCatalog.setFileCatalog(file);
+            return file;
+        }
+        else{
+            throw new IllegalArgumentException("创建失败");
+        }
     }
     /*创建一个文件*/
 
@@ -41,8 +45,20 @@ public class FileOperation {
     /*打开一个文件*/
 
 
-    public static void writeFile(FileStructure file){
-
+    public static void writeFile(FileStructure file,String string){
+        int need_number;
+        if(string.length()%64==0){
+            need_number = string.length();
+        }
+        else{
+            need_number = string.length()+1;
+        }
+        if(DiskBlock.ifEnough(need_number)){
+            DiskBlock.writeStringFile(string,file.getBegin());
+        }
+        else{
+            throw new IllegalArgumentException("磁盘已满");
+        }
     }
     /*写文件*/
 
@@ -74,12 +90,6 @@ public class FileOperation {
         file.setAttribute(temp);
     }
     /*改变一个文件属性*/
-    public static void CloseFile(FileStructure file){
-        if(FileConstraint.closeFile(file, file.getName(), 1)==true){
-            FileConstraint.outTable(file);
-        }
-
-    }
 
 
     public static  String changeName(){
@@ -123,6 +133,74 @@ public class FileOperation {
     public static void ReadData(File file){
         Serializationmode.Deserialization(file);
     }
+    //-----------------------------------------------------------------------------
+
+    public static FileStructure createCatalog(FileStructure currentCatalog,String catalogName){
+        //currentCatalog为当前目录，catalogName为目录名
+        if(FileConstraint.createFile(currentCatalog,catalogName,CATALOG)){
+            begin = DiskBlock.ifFull();
+            /*得到初始磁盘块号，-1说明内存满了，创建失败*/
+        }
+        else{
+            throw new IllegalArgumentException("创建失败");
+        }
+
+        if(begin!=-1){
+            FileStructure catalog = new FileStructure(currentCatalog,catalogName,begin,CATALOG);
+            currentCatalog.setFileCatalog(catalog);
+            return catalog;
+        }
+        else{
+            throw new IllegalArgumentException("创建失败");
+        }
+    }
+    /*创建一个目录*/
+
+    public static List openCatalog(FileStructure currentCatalog){
+        if(!FileConstraint.havedOpen(currentCatalog)){
+            currentCatalog.openSignal();
+            return currentCatalog.getFlieCatalog();
+        }
+        else{
+            throw new IllegalArgumentException("目录已打开");
+        }
+    }
+    //打开一个目录
+
+    public static void closeCatalog(FileStructure currentCatalog){
+        if(FileConstraint.havedOpen(currentCatalog)){
+            currentCatalog.closeSignal();
+        }
+        else{
+            throw new IllegalArgumentException("目录已关闭");
+        }
+    }
+    //关闭一个目录
+
+    public static boolean clearCatalog(FileStructure currentCatalog){
+        FileStructure temp;
+        if(currentCatalog.getSignal()==0){
+            currentCatalog.getFatherCatalog().deleteFileCatalog(currentCatalog);
+
+            for(int i=currentCatalog.getFlieCatalog().size()-1;i>=0;i--){
+                temp = (FileStructure) currentCatalog.getFlieCatalog().get(i);
+                if(temp.getAttribute()==CATALOG){
+                    clearCatalog(temp);
+                }
+                else
+                {
+                    FileOperation.clearFile(temp);
+                }
+            }
+            FileOperation.clearFile(currentCatalog);
+            return true;
+        }
+        else{
+            throw new IllegalArgumentException("文件正在使用,删除失败");
+        }
+
+    }
+    //删除一个目录
 
 }
 
