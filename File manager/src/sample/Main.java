@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 import java.io.File;
@@ -52,13 +53,21 @@ public class Main extends Application {
         System.out.println(String.valueOf(x));
 
 
+         */
+        FileStructure rootfile=new FileStructure(null,"BEN",1,1000);
+            TreeItemView.setTreeRoot(rootfile);
+        AnchorPane anchor_pane=new AnchorPane();
+        anchor_pane.getChildren().add(TreeItemView.treeView);
+        TreeItemView.operationTree();
+        TreeItemView.addTreeChild(new FileStructure(rootfile,"ABC",2,1000));
+                Scene scene=new Scene(anchor_pane,860,610);
+                primaryStage.setScene(scene);
+//        Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
+//        primaryStage.setTitle("OS课设");
+//        primaryStage.setScene(new Scene(root, 860, 610));
+                primaryStage.show();
 
-        Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
-        primaryStage.setTitle("Hello World");
-        primaryStage.setScene(new Scene(root, 300, 275));
-        primaryStage.show();
 
- */
     }
 
 
