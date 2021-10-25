@@ -1,4 +1,4 @@
-package sample;
+package Action;
 
 import javafx.event.EventHandler;
 import javafx.scene.control.TreeItem;
@@ -6,7 +6,8 @@ import javafx.scene.control.TreeView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import sun.reflect.generics.tree.Tree;
+import sample.FileOperation;
+import sample.FileStructure;
 
 public class TreeItemView {
     public static TreeView<String> treeView;
@@ -15,7 +16,7 @@ public class TreeItemView {
     public static void setTreeRoot(FileStructure rootfile)
     {
         String fileName= rootfile.getName();
-        Image fileicon=new Image("sample/folder.png",30,30,false,false);
+        Image fileicon=new Image("Action/folder.png",30,30,false,false);
         TreeItem childItem=new TreeItem(fileName,new ImageView(fileicon));
         froot=new TreeItem("根目录");
         childItem.setExpanded(true);
@@ -53,8 +54,8 @@ public class TreeItemView {
     //增加目录节点
     public static void addTreeChild(FileStructure file)
     {
-        Image x=new Image("sample/file.png",30,30,false,false);
-        Image y=new Image("sample/folder.png",30,30,false,false);
+        Image x=new Image("Action/file.png",30,30,false,false);
+        Image y=new Image("Action/folder.png",30,30,false,false);
         TreeItem<String>fatherTreeItem=(TreeItem)FileAndPane.FiletoTreeItem.get(file.getFatherCatalog());
         String fileName= file.getName();
         TreeItem<String> newTreeItem=null;
