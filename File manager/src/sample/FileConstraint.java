@@ -102,9 +102,9 @@ public class FileConstraint {
     }
     /*判断该文件可不可以写*/
 
+}
 
-
-   public static int catalogNumber(String text){
+/* public static int catalogNumber(String text){
         if(text!=null){
             int x = text.length()/64;
             return x+1;
@@ -156,4 +156,4 @@ public class FileConstraint {
         return false;
     }
 
- }
+ */

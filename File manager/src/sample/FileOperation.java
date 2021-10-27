@@ -1,8 +1,6 @@
 package sample;
-import java.awt.*;
 import java.io.File;
 import java.util.*;
-import java.util.List;
 
 public class FileOperation {
     public static int begin;
@@ -10,22 +8,22 @@ public class FileOperation {
 
     public static FileStructure createFile(FileStructure currentCatalog,String name){
         //currentCatalog为当前目录，name为文件名
-        if(FileConstraint.createFile(currentCatalog,name,FILE)){
-            begin = DiskBlock.ifFull();
-            /*得到初始磁盘块号，-1说明内存满了，创建失败*/
-        }
-        else{
-            throw new IllegalArgumentException("创建失败");
-        }
+            if(FileConstraint.createFile(currentCatalog,name,FILE)){
+                begin = DiskBlock.ifFull();
+                /*得到初始磁盘块号，-1说明内存满了，创建失败*/
+            }
+            else{
+                throw new IllegalArgumentException("创建失败");
+            }
+            if(begin!=-1){
+                FileStructure file = new FileStructure(currentCatalog,name,begin,FILE);
+                currentCatalog.setFileCatalog(file);
 
-        if(begin!=-1){
-            FileStructure file = new FileStructure(currentCatalog,name,begin,FILE);
-            currentCatalog.setFileCatalog(file);
-            return file;
-        }
-        else{
-            throw new IllegalArgumentException("创建失败");
-        }
+                return file;
+            }
+            else{
+                throw new IllegalArgumentException("创建失败");
+            }
     }
     /*创建一个文件*/
 
@@ -92,47 +90,6 @@ public class FileOperation {
     /*改变一个文件属性*/
 
 
-    public static  String changeName(){
-        String name;
-        name= (new TextArea()).getText();
-        return name;
-    }
-    public static int changeAttribute(){
-        int n_attribute;
-        if(true)           //选择两种文件的按钮，两种结果
-        {
-            n_attribute = 0001;     //文件选择只读属性
-        }
-        else
-        {
-            n_attribute=0100;       //文件选择普通文件
-        }
-        return n_attribute;
-
-    }
-    public static boolean ChooseName(){
-        //这里需要提供选择名字的可视化操作
-        return true;
-    }
-    public static boolean ChooseAttribute(){
-        //这里需要提供选择属性的可视化操作
-        return true;
-    }
-    public static void ChangeFile(FileStructure file){
-        if (FileConstraint.change(file,file.getName())){
-            if(ChooseName())
-                file.setName(changeName());
-            if(ChooseAttribute())
-                file.setAttribute(changeAttribute());
-
-        }
-    }
-    public static void SaveData(FileStructure rootCatalog){        //这里只能放入根目录作为参数
-        Serializationmode.Serialization(rootCatalog);
-    }
-    public static void ReadData(File file){
-        Serializationmode.Deserialization(file);
-    }
     //-----------------------------------------------------------------------------
 
     public static FileStructure createCatalog(FileStructure currentCatalog,String catalogName){

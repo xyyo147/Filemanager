@@ -34,7 +34,7 @@ public class Main extends Application {
         String array="撒旦撒旦撒旦撒旦撒旦撒旦撒旦撒旦撒旦撒旦撒旦撒旦撒旦撒旦撒旦撒旦撒旦撒旦撒旦撒旦撒旦撒旦撒旦撒旦撒旦撒旦撒旦撒旦撒旦撒旦撒旦撒旦撒旦撒旦撒旦撒旦撒旦撒旦撒旦撒旦撒旦撒旦撒旦撒旦撒旦撒旦撒旦撒旦撒旦撒旦撒旦撒旦撒旦撒旦撒旦撒旦          撒旦撒旦撒旦撒旦";
         int lastnum=DiskBlock.writeStringFile(array,3);
         System.out.println("输出盘块"+lastnum);
-       String str= DiskBlock.readFile(3);
+        String str= DiskBlock.readFile(3);
         System.out.println(str);
         DiskBlock.deleteFile(3);
         str= DiskBlock.readFile(3);System.out.println(str);
@@ -55,17 +55,15 @@ public class Main extends Application {
 
          */
         FileStructure rootfile=new FileStructure(null,"BEN",1,1000);
-            TreeItemView.setTreeRoot(rootfile);
-        AnchorPane anchor_pane=new AnchorPane();
-        anchor_pane.getChildren().add(TreeItemView.treeView);
-        TreeItemView.operationTree();
-        TreeItemView.addTreeChild(new FileStructure(rootfile,"ABC",2,1000));
-                Scene scene=new Scene(anchor_pane,860,610);
-                primaryStage.setScene(scene);
-//        Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
-//        primaryStage.setTitle("OS课设");
-//        primaryStage.setScene(new Scene(root, 860, 610));
-                primaryStage.show();
+        TreeItemView.setTreeRoot(rootfile);
+        // AnchorPane anchor_pane=new AnchorPane();
+        // anchor_pane.getChildren().add(TreeItemView.treeView);
+        //        Scene scene=new Scene(anchor_pane,860,610);
+        //        primaryStage.setScene(scene);
+        Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
+        primaryStage.setTitle("OS课设");
+        primaryStage.setScene(new Scene(root, 860, 610));
+        primaryStage.show();
 
 
     }

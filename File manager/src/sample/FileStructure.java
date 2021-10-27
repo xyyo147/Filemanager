@@ -1,8 +1,7 @@
 package sample;
-import java.io.Serializable;
 import java.util.*;
 
-public class FileStructure implements Serializable {
+public class FileStructure {
     private String name;
     /*文件或目录名*/
     private int attribute;
@@ -82,7 +81,7 @@ public class FileStructure implements Serializable {
     }
     /*获取父目录*/
 
-    public List getFlieCatalog(){
+    public List<FileStructure> getFlieCatalog(){
         return this.fileCatalog;
     }
     /*获取子文件和子目录数组*/
